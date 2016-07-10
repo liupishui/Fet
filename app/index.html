@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script>
+    window.nodeRequire = require;
+    delete window.require;
+    delete window.exports;
+    delete window.module;
+    </script>
+    <link rel="stylesheet" type="text/css" href="css/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="css/css.css"/>
+    <script type="text/javascript" src="js/jquery.js"></script>
+</head>
+<body>
+    <!--<div class="header">
+        <div class="menu">
+            网站配置
+        </div>
+        <span class="btn_win_close" onclick="window.close();">X</span>
+    </div>-->
+    <div class="div_main">
+        <div class="mod_config">
+            <div class="hd">
+                <div class="table_hd">
+                    <span class="col col1">
+                        域名
+                    </span>
+                    <span class="col col2">
+                        目录地址
+                    </span>
+                    <span class="col col3">
+                        操作
+                    </span>
+                </div>
+            </div>
+            <div class="bd">
+                <div class="bd_l">
+                    <div class="table_bd">
+                    </div>
+                    <div class="table_ft">
+                                <input type="button" value="添加新网站" class="btn_normal">
+                    </div>
+                </div>
+                <div class="bd_r animated">
+                    <div class="form_config_set">
+                        <dl>
+                            <dt>域名</dt>
+                            <dd>
+                                <input type="text" id="name" class="input_text1">
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>网站目录</dt>
+                                <dd>
+                                    <input placeholder="选择网站根目录" type="text" value="" id="path" name="path" class="input_text1">
+                                    <lable class="btn_sel_folder"><input type="file" webkitdirectory='true'/></lable>
+                                </dd>
+                        </dl>
+                        <dl>
+                            <dt>网站ip</dt>
+                            <dd>
+                                <input type="text" placeholder="默认localhost" id="host" class="input_text1">
+                            </dd>
+                            <dt>网站端口</dt>
+                            <dd>
+                                <input type="text" placeholder="默认随机端口" id="port" class="input_text1">
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>目录浏览</dt>
+                            <dd>
+                                <input type="checkbox" checked="true" id="scandir"><label for="scandir" class="mr10">开启</label><span>切换需重启浏览器生效</span>
+                            </dd>
+                            <dt>自动刷新</dt>
+                            <dd>
+                                <input type="checkbox" checked="true" id="preload"><label for="preload">开启</label>
+                            </dd>
+                        </dl>
+                        <div class="mod_package_conf">
+                            <dl>
+                                <dt>打包配置</dt>
+                                <dd>
+                                    <div class="items_pack">
+                                        <div class="clearfix">
+                                                 path
+                                                <input type="text" value="" placeholder="选择目录" id="packagePath" name="path" class="input_text1">
+                                                <lable class="btn_sel_folder"><input type="file" webkitdirectory='true'/></lable>
+                                        </div>
+                                        <div class="item">
+                                            <div class="hd">
+                                                 html
+                                            </div>
+                                            <div class="bd">
+                                                <label><input type="checkbox" id="htmlBeautify" />美化</label>
+                                            </div>
+                                        </div>
+                                       <div class="item">
+                                            <div class="hd">
+                                                 js 
+                                            </div>
+                                            <div class="bd">
+                                                <input type="text" placeholder="正则匹配文件路径,默认/" class="input_text1" id="jsPath">
+                                                <input checked="checked" type="radio" value="1" name="jsConfig" id="jsConfig1"/><label for="jsConfig1" class="mr10">
+                                                    无&nbsp;&nbsp;
+                                                </label>                                                <input type="radio" value="2" name="jsConfig" id="jsConfig2" /><label for="jsConfig2" class="mr10">压缩</label>                                                <input type="radio" value="3" name="jsConfig" id="jsConfig3" /><label for="jsConfig3">美化</label>
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="hd">
+                                                 css
+                                            </div>
+                                            <div class="bd">
+                                                <input checked="checked" type="radio" value="1" name="cssConfig" id="cssConfig1"/><label for="cssConfig1" class="mr10">
+                                                    无&nbsp;&nbsp;
+                                                </label>                                                <input type="radio" value="2" name="cssConfig" id="cssConfig2" /><label for="cssConfig2" class="mr10">压缩</label>                                                <input type="radio" value="3" name="cssConfig" id="cssConfig3" /><label for="cssConfig3">美化</label>
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="hd">
+                                                 img
+                                            </div>
+                                            <div class="bd">
+                                                <label><input type="checkbox" checked="true" id="imgCompress" />压缩</label>
+                                            </div>
+                                        </div>
+                                     </div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                    <div class="clearfix">
+                        <input type="button" value="确定添加" class="btn_normal" id="btnSubmit">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script type="text/javascript">
+const {ipcRenderer} = nodeRequire('electron');
+$(function(){
+    ipcRenderer.send('documentready','1');
+    ipcRenderer.on('documentready',(event,arg)=>{//文档渲染完成读取配置文件并渲染配置文件
+        //配置文件为空
+        var configObj=$.parseJSON(arg);
+        /***
+                                <div class="items">
+                                <span class="col col1">春申君</span>
+                                <span class="col col2">D:f</span>
+                                <span class="col col3"><input type="button" value="浏览目录" class="btn_normal" /> <input type="button" value="删除设置" class="btn_normal" /> <input type="button" class="btn_normal" value="浏览器打开" /> <input type="button" class="btn_normal" value="打包"/></span>
+                        </div>
+
+        ***/
+        function showItems(configObj,id){
+            itemsAll='';
+            var t=configObj.length;
+            while(t--){
+                if(typeof(id)!='undefined'&&t==id){
+                        itemsAll+="<div class='items curr' data-id='"+t+"'>"
+                        +"<span class='col col1'>"+configObj[t].name+"</span>"
+                        +"<span class='col col2'>"+configObj[t].path+"</span>"
+                        +"<span class='col col3'><input type='button' value='浏览目录' class='btn_normal' data-path='"+configObj[t].path+"'/>"
+                        +"<input type='button' value='删除设置' class='btn_normal' data-id='"+t+"'/>"
+                        +"<input type='button' class='btn_normal' value='浏览器打开' data-id='"+t+"'/>"
+                        +"<input type='button' class='btn_normal' value='打包' data-id='"+t+"'/></span></div>"
+                }else{
+                    itemsAll+="<div class='items' data-id='"+t+"'>"
+                    +"<span class='col col1'>"+configObj[t].name+"</span>"
+                    +"<span class='col col2'>"+configObj[t].path+"</span>"
+                    +"<span class='col col3'><input type='button' value='浏览目录' class='btn_normal' data-path='"+configObj[t].path+"'/>"
+                    +"<input type='button' value='删除设置' class='btn_normal' data-id='"+t+"'/>"
+                    +"<input type='button' class='btn_normal' value='浏览器打开' data-id='"+t+"'/>"
+                    +"<input type='button' class='btn_normal' value='打包' data-id='"+t+"'/></span></div>"
+                    }
+                }
+            $(".mod_config .table_bd").html(itemsAll);
+        }
+        showItems(configObj);
+        //配置文件渲染完成
+        //选择文件目录
+        $("input[type=file]").on('change',function(){
+            var $that=$(this);
+            if($that.val()){
+                $that.parent().prev('input').val($that[0].files[0].path);
+            }
+        });
+        /***$("input[type=file]").on('click',function(e){
+            alert(2);
+            var $that=$(this);
+            if($that.parent().prev('input').val()){
+                var $e=$.event.fix(e);
+                $e.preventDefault();
+                ipcRenderer.send('shellOpenItem',$that.parent().prev('input').val());
+            }
+        });***/
+        ipcRenderer.on('shellOpenItem',(event,arg)=>{if(arg)alert('文件夹不存在，请修改目录文件位置');});
+        //浏览目录
+        $(".mod_config").delegate('input[value=浏览目录]','click',function(){
+            var dataPath=$(this).attr('data-path');
+            ipcRenderer.send('shellOpenItem',dataPath);
+        });
+        //在浏览器打开
+        $(".mod_config").delegate('input[value=浏览器打开]','click',function(){
+            var dataId=$(this).attr('data-id');
+            ipcRenderer.send('openExternal',dataId);
+        });
+        //是否目录浏览切换
+
+        //打包文件
+        $(".mod_config").delegate('input[value=打包]','click',function(){
+            var dataId=$(this).attr('data-id');
+            ipcRenderer.send('packagePaper',dataId);
+        });
+        //切换为新建网站模式
+        $(".mod_config .table_ft .btn_normal").click(function(){//点击左侧“添加新网站”
+            $("#btnSubmit").css('opacity',1);
+            $("#btnSubmit").val('确定添加');
+                var dataId=$(".form_config_set").removeAttr('data-id');
+                    $("#name").val('');
+                    $("#path").val('');
+                    $("#port").val('');
+                    $("#host").val('');
+                    $("#packagePath").val('');
+                    $("#htmlBeautify").prop('checked',true);
+                    $("#scandir").prop('checked',true);
+                    $("#preload").prop('checked',true);
+                    $("#jsPath").val();
+                    $("input[name=jsConfig]").eq(0).prop('checked',true);
+                    $("input[name=cssConfig]").eq(0).prop('checked',true);
+                    $("#imgCompress").prop('checked',true);
+                    $(".bd_r").addClass('rollIn');
+                    setTimeout(function(){$(".bd_r").removeClass('rollIn')}, 1200)
+        });
+        //删除网站
+        $(".mod_config").delegate('input[value=删除设置]','click',function(){
+            var dataId=$(this).attr('data-id');
+            if(confirm('确定要删除吗？并不会删除对应文件')){
+                configObj.splice(dataId,1);
+                showItems(configObj);
+                ipcRenderer.send('modifyConfig',JSON.stringify(configObj));
+            }
+        })
+        var timmerShowEachConfig='';
+        $(".mod_config").delegate('.items','mouseenter',function(){//左侧网站列表划过，右侧显示相应配置并可修改
+            $("#btnSubmit").css('opacity',0);
+            if(timmerShowEachConfig){
+                clearTimeout(timmerShowEachConfig);
+            }
+            var $that=$(this);
+            timmerShowEachConfig=setTimeout(function(){
+                $that.siblings().removeClass('curr');
+                $that.addClass('curr');
+                $("#btnSubmit").val('确定修改');
+                var dataId=$that.attr('data-id');
+                var itemData=configObj[dataId];
+                var $itemData=$(".form_config_set");
+                    $itemData.attr("data-id",dataId);
+                    $("#name",$itemData).val(configObj[dataId].name);
+                    $("#path",$itemData).val(configObj[dataId].path);
+                    $("#port",$itemData).val(configObj[dataId].port);
+                    $("#host",$itemData).val(configObj[dataId].host);
+                    configObj[dataId].scandir?$("#scandir").prop("checked",true):$("#scandir").prop('checked',false);
+                    configObj[dataId].preload?$("#preload").prop("checked",true):$("#preload").prop('checked',false);
+                    $("#packagePath",$itemData).val(configObj[dataId].packagePath);
+                    configObj[dataId].htmlBeautify?$("#htmlBeautify").prop('checked',true):$("#htmlBeautify").prop('checked',false);
+                    $("#jsPath").val(configObj[dataId].jsPath);
+                    $("input[name=jsConfig]").filter(function(){return $(this).val()==configObj[dataId].jsConfig}).prop('checked',true);
+                    $("input[name=cssConfig]").filter(function(){return $(this).val()==configObj[dataId].cssConfig}).prop('checked',true);
+                    configObj[dataId].imgCompress?$("#imgCompress").prop("checked",true):$("#imgCompress").prop('checked',false);
+            },80);
+        });
+        $(".mod_config").delegate('.items','mouseleave',function(){
+            if(timmerShowEachConfig){
+                clearTimeout(timmerShowEachConfig);
+            }
+        })
+        //新建及网站
+        $("#btnSubmit").on('click',function(){
+            if($(this).val()=='确定添加'){
+                if($.trim($("#path").val())==''){
+                    alert('网站目录不能为空');
+                    return;
+                }
+                var item={};
+                item.name=$("#name").val();
+                item.path=$("#path").val();
+                item.port=$("#port").val();
+                item.host=$.trim($("#host").val())==''?'localhost':$.trim($("#host").val());
+                item.packagePath=$("#packagePath").val();
+                item.scandir=$("#scandir").prop("checked")?true:false;
+                item.preload=$("#preload").prop("checked")?true:false;
+                item.htmlBeautify=$("#htmlBeautify").prop("checked")?true:false;
+                item.jsPath=$.trim($("#jsPath").val())==''?'/':$.trim($("#jsPath").val());
+                item.jsConfig=$("input[name=jsConfig]:checked").val();
+                item.cssConfig=$("input[name=cssConfig]:checked").val();
+                item.imgCompress=$("#imgCompress").prop("checked")?true:false;
+                configObj.push(item);
+                showItems(configObj);
+            }else{
+                var dataId=$(".form_config_set").attr('data-id');
+                configObj[dataId].name=$("#name").val();
+                configObj[dataId].path=$("#path").val();
+                configObj[dataId].port=$("#port").val();
+                configObj[dataId].host=$.trim($("#host").val())==''?'localhost':$.trim($("#host").val());
+                configObj[dataId].packagePath=$("#packagePath").val();
+                configObj[dataId].scandir=$("#scandir").prop("checked")?true:false;
+                configObj[dataId].preload=$("#preload").prop("checked")?true:false;
+                configObj[dataId].htmlBeautify=$("#htmlBeautify").prop("checked")?true:false;
+                configObj[dataId].jsPath=$.trim($("#jsPath").val())==''?'/':$.trim($("#jsPath").val());
+                configObj[dataId].jsConfig=$("input[name=jsConfig]:checked").val();
+                configObj[dataId].cssConfig=$("input[name=cssConfig]:checked").val();
+                configObj[dataId].imgCompress=$("#imgCompress").prop("checked")?true:false;
+ //               console.log(configObj);
+                showItems(configObj,dataId);
+            }
+            ipcRenderer.send('modifyConfig', JSON.stringify(configObj));
+        });
+        //自动保存修改的配置
+        $(".form_config_set input").on('change',function(){
+            if($("#btnSubmit").val()!='确定添加'){
+                $("#btnSubmit").trigger('click');
+            }
+        })
+        $("input[type=text]").blur(function(){
+            if($("#btnSubmit").val()!='确定添加'){
+//            console.log(this);
+                $("#btnSubmit").trigger('click');
+            }
+        });
+    })
+})
+    /**$('html').addClass('window_focus');
+ipcRenderer.on('browser-window-focus',(event,arg)=>{
+    $('html')[arg==1?'addClass':'removeClass']('window_focus');
+})**/
+</script>
+</html>
