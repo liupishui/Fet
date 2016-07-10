@@ -1,0 +1,69 @@
+.animated {
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+@-webkit-keyframes rollIn {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(-100%, 0, 0) rotate3d(0, 0, 1, -120deg);
+    transform: translate3d(-100%, 0, 0) rotate3d(0, 0, 1, -120deg);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+.rollIn {
+  -webkit-animation-name: rollIn;
+  animation-name: rollIn;
+}
+.tip{line-height:16px;position:absolute;background:#fff;color:#2b2b2b;padding:6px;border:1px solid #ccc;display:none;}
+.tip_wp{position:relative;z-index: 1100;}
+.tip_wp:hover >.tip{display:block;}
+/***.header{height: 34px;}
+.header .menu{-webkit-user-select: none;
+  -webkit-app-region: drag;cursor:move;font:16px/34px Microsoft Yahei;text-indent: 10px;width:760px;float: left;background:#fff;}
+.header .btn_win_close{background:#fff;float: right;width: 40px;height: 34px;text-align: center;font:20px/34px Microsoft Yahei;color:#666;cursor: default;transition:all .2 ease-in-out;}
+.window_focus .header .menu{background:#5a6c88;color:#fff;}
+.window_focus .header .btn_win_close{background:#5a6c88;color:#fff;}
+.header .btn_win_close:hover{background:#e00;color:#fff;}
+.header .btn_win_close:active{background:#c00;color:#fff;}***/
+.div_main{color:#333;font:14px/2.4 verdana,Microsoft Yahei;overflow: hidden;}
+.mod_config{overflow: hidden;}
+.div_main .mod_config .bd{color:#333;}
+.btn_normal{background:#fff;color:#888;border:none;height:24px;padding:0 5px;}
+.btn_normal:hover{background:#3e3939;color:#fff;}
+.btn_normal:active{background: #000;}
+.input_text1{border:1px solid #fff;padding:3px;}
+.title1{font-weight: bold;border-bottom: 1px solid #ccc;}
+.bd_l{-webkit-user-select:none;float: left;width: 500px;height:560px;overflow: hidden;}
+.mod_config .table_hd{overflow:hidden;background:rgba(255, 255, 255, 0.32);padding:0 10px;-webkit-user-select:none;}
+.mod_config .table_bd{background:#fff;color:#333;width:480px;overflow-y: scroll;height: 474px;padding:7px 10px;}
+.mod_config .table_bd::-webkit-scrollbar{width: 4px;};
+.mod_config .table_bd::-webkit-scrollbar-track{background: #ccc;}
+.mod_config .table_bd::-webkit-scrollbar-track-piece{background:#666;box-shadow: 0 0 8px #000;}
+.mod_config .table_bd::-webkit-scrollbar-thumb{background-color: #0cb511;box-shadow:4px 0 4px #000;}
+.mod_config .table_ft{text-align: center;}
+.mod_config .items{overflow: hidden;height:32px;line-height: 32px;}
+.mod_config .items.curr{background:#a2e8fd;}
+.mod_config .col{text-overflow:ellipsis;white-space:nowrap;letter-spacing:0;padding-right:10px;float: left;overflow: hidden;}
+.mod_config .col1{width: 100px;height:32px;}
+.mod_config .col2{width: 90px;height:32px;}
+.mod_config .col3{width: 266px;}
+.mod_config .col3 .btn_normal{margin-right: 2px;min-width: 55px;border:1px solid #ccc;}
+.mod_config .col:last-child{padding-right: 0;}
+.bd_r{-webkit-user-select:none;float: right;width: 290px;padding:0 0 0 10px;margin-top: 3px;}
+.bd_r .form_config_set{padding-right: 10px;}
+.bd_r .form_config_set dl{position:relative;padding-left: 66px;}
+.bd_r .form_config_set dt{position:absolute;left:0;text-align: right;width: 60px;}
+.bd_r .form_config_set dd{position:relative;}
+.bd_r .form_config_set .bd{position:relative;}
+.bd_r .form_config_set .btn_sel_folder{position:relative;top:0;position:absolute;left:0;text-indent: 4px;}
+.bd_r .form_config_set .btn_sel_folder input{position:absolute;left: 0;top: 8px;opacity:0;}
+#btnSubmit{margin-left:64px;}
+.mod_package_conf .item{padding-left:34px;position:relative;}
+.mod_package_conf .hd{position:absolute;top:0;left:0;}
