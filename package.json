@@ -1,6 +1,8 @@
 {
   "name": "Fet",
+  "title":"Fet",
   "version": "0.8.0",
+  "description": "Front-End Tool",
   "main": "app/main.js",
   "scripts": {
     "package": "electron-packager . --appname=Fetool --app-copyright='http://www.lpsjj.cn' --app-version=0.8.6 --asar=true --asar-unpack=myConfig.json --all --all --out f:/test17 --version 1.2.0 --overwrite --icon=app/img/icon.ico --version-string.CompanyName=lpsjj,inc --version-string.ProductName=product --version-string.FileDescription=Fetool",
@@ -41,5 +43,14 @@
     "nconf": "0.8.4",
     "parseurl": "^1.3.1",
     "socket.temp": "git+https://github.com/liupishui/socket.temp.git"
-  }
+  },
+    "homepage": "https://github.com/liupishui/Fet",
+    "author": {
+        "name": "jingshuiyuan",
+        "url": "http://www.lpsjj.cn/blog/"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/liupishui/Fet.git"
+    }
 }
