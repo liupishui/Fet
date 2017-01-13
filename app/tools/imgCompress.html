@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" class="page-base64">
+    <head>
+        <meta charset="utf-8">
+        <script>
+        window.nodeRequire = require;
+        delete window.require;
+        delete window.exports;
+        delete window.module;
+        </script>
+        <link rel="stylesheet" type="text/css" href="../css/css.css">
+        <link rel="stylesheet" type="text/css" href="../css/reset.css">
+    </head>
+    <body>
+    <textarea class="mainbox">压缩图片</textarea>
+    <div class="progress clearfix">
+        <div class="progressBarWP">
+            <canvas class="progressBar"></canvas>
+        </div>
+        <div class="progressNum">
+
+        </div>
+    </div>
+    <div class="red">将压缩图片拖放到上面框内将自动压缩</div>
+    </body>
+    <script type="text/javascript" src="../js/jquery.js"></script>
+    <script type="text/javascript" src="../js/LightLoader.js"></script>
+    <script type="text/javascript">
+    const {ipcRenderer} = nodeRequire('electron');
+
+    //阻止浏览器默认行。
+        $("*").on({
+            dragleave:function(e){    //拖离
+                e.preventDefault();
+                $("body").addClass('body-over');
+            },
+            drop:function(e){  //拖后放
+                e.preventDefault();
+            },
+            dragenter:function(e){    //拖进
+                e.preventDefault();
+                $("body").addClass('body-over');
+            },
+            dragover:function(e){    //拖来拖去
+                e.preventDefault();
+            }
+        });
+        var mainbox=$(".mainbox")[0];
+        var imgFileLength=0,imgFileDoneLength=0;
+        var loaderBar = new lightLoader($(".progress .progressBar")[0], $(".progress .progressBar").width(), $(".progress .progressBar").height());
+            loaderBar.looping=false;
+            loaderBar.loadProcess=0;
+            loaderBar.loadingcallback=function(obj){
+                if(obj.loaded>=100){
+                    setTimeout(function(){
+                        $(".progress").fadeOut(800);
+                    },2000)
+                }
+            }
+            loaderBar.init();
+        mainbox.addEventListener('drop', function(e){
+            $(".progress").show(0);
+            imgFileDoneLength=0;
+            e.preventDefault();
+            $(this).val('');
+            loaderBar.loadProcess=0;
+            loaderBar.loaded=0;
+            $('body').removeClass('body-over');
+            $(this).removeClass('mainbox-over');
+            $(this).css({'line-height':'1.2','text-align':'left'});
+            var files=e.dataTransfer.files;
+            imgFileLength=files.length;
+            var filesArr=[];
+            for(let i=0;i<files.length;i++){
+                if(files[i].type.indexOf('image')==-1){
+                    alert(files[i].path+'不是正确的图片');
+                    return;
+                };
+                $(".mainbox").val(files[i].path+'\n'+$(".mainbox").val());
+                filesArr.push({name:files[i].name,path:files[i].path,type:files[i].type});
+            }
+            $('.progress .progressNum').text('0/'+imgFileLength);
+            ipcRenderer.send('compress:Img',JSON.stringify(filesArr));
+        })
+        ipcRenderer.on('compress:Img:done',(event,arg)=>{
+            $(".mainbox").val($(".mainbox").val().replace(arg+'\n',''));
+            imgFileDoneLength++;
+            loaderBar.loadProcess=imgFileDoneLength/imgFileLength;
+            $('.progress .progressNum').text(imgFileDoneLength+'/'+imgFileLength);
+        });
+        mainbox.addEventListener('dragenter', function(e){
+            e.preventDefault();
+            $(this).addClass('mainbox-over');
+        })
+        mainbox.addEventListener('dragleave', function(e){
+            e.preventDefault();
+            $(this).removeClass('mainbox-over');
+        })
+
+    </script>
+</html>
