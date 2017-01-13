@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <script>
+        window.nodeRequire = require;
+        delete window.require;
+        delete window.exports;
+        delete window.module;
+        </script>
+        <link rel="stylesheet" type="text/css" href="../css/css.css">
+        <link rel="stylesheet" type="text/css" href="../css/reset.css">
+        <script type="text/javascript" src="../js/jquery.js"></script>
+        </head>
+    <body class="page-tools">
+        <div class="page-tools-inner">
+            <div class="page-tools-left">
+            <webview name="main" src="htmlchar.html" class="iframe" nodeintegration></webview>
+            </div>
+            <div class="page-tools-right">
+                <a href="htmlchar.html" target="main">HTML实体符</a>
+                <a href="base64.html" target="main">图片转BASE64</a>
+                <a href="jsCompress.html" target="main">js压缩/美化</a>
+                <a href="cssCompress.html" target="main">css压缩/美化</a>
+                <a href="imgCompress.html" target="main">图片压缩</a>
+                <div>---------------
+                </div>
+                <a href="https://www.staticfile.org/">Staticfile CDN</a>
+            </div>
+        </div>
+    </body>
+    <script type="text/javascript">
+             $(function(){
+                $(".page-tools-right a").click(function(e){
+                    e.preventDefault();
+                    $(".iframe").attr('src',$(this).attr('href'));
+                });
+                $(".iframe")[0].addEventListener('dom-ready',function(){
+                    //$(".iframe")[0].openDevTools();
+                })
+             });
+    </script>
+</html>
