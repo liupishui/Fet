@@ -1,0 +1,13 @@
+$$.config={
+    staticPath:['/favicon.ico','/public/'],
+    database:{
+        host     :'127.0.0.1',
+        user     :'root',
+        password :'root',
+        database :'works'
+    },
+    router:[
+        {rule   :'^\\S+$',action :'main'},
+        {rule:"^\/news/(\\d+)/(\\d+).html",action :'news'}
+        ]
+}

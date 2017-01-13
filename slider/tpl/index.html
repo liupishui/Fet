@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{{name}}</title>
+    <link rel="stylesheet" href="">
+    <style type="text/css" media="screen">
+         *{padding:0;margin:0;}
+         #slider{height: 400px;width: 1920px;overflow: hidden;position: relative;}
+         #slider .sliderBox .item{height: 400px;width: 1920px;overflow: hidden;position:absolute;text-align: center;opacity:0;filter:alpha(opacity=0);}
+         #slider .sliderBox .curr{opacity:1;filter:alpha(opacity=100);}
+         #slider .switcher{position:absolute;top:50%;left:50%;margin-left: 200px;}
+         #slider .switcher span{display: block;background: #f00;width:40px;text-align: center;}
+         #slider .switcher .curr{background:#ff0;}
+         #slider1{height: 400px;width: 1920px;overflow: hidden;position: relative;}
+         #slider1 .sliderBox{left:50%;margin-left:-300px;position:relative;height: 400px;width: 600px;overflow: hidden;}
+         #slider1 .sliderBox .item{display:none;height: 400px;width: 600px;overflow: hidden;position:absolute;text-align: center;}
+         #slider1 .sliderBox .curr{display:block;}
+         #slider1 .switcher{position:absolute;top:50%;left:50%;margin-left: 200px;}
+         #slider1 .switcher span{display: block;background: #f00;width:40px;text-align: center;}
+         #slider1 .switcher .curr{background:#ff0;}
+    </style>
+</head>
+<body>
+{include /tpl/include/header.html}
+{{this.get.gg}}
+{{this.post.text}}
+<table>
+  <tbody>
+    {{#each this.works}}
+    <tr>
+      <td>{{name}}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+    {{this.str}}
+<img src="{{imgSrc}}" alt="">
+  <form action="/?index=32&gg=98" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+    <input name='text' value="GGG" />
+    <input name='SSS' value="FFF" />
+    <input type="file" name='upload'>
+    <input type="file" name='sss'>
+    <input type="submit" value="发送" />
+  </form>
+    <div id="slider">
+        <div class="sliderBox">
+            <div class="item curr">
+                <img src="/public/1.jpg" alt="">
+            </div>
+            <div class="item">
+                <img src="/public/2.jpg" alt="">
+            </div>
+            <div class="item">
+                <img src="/public/1.jpg" alt="">
+            </div>
+            <div class="item">
+                <img src="/public/2.jpg" alt="">
+            </div>
+        </div>
+        <div class="switcher">
+           <span class="curr">1</span><span>2</span><span>3</span><span>4</span>
+        </div>
+    </div>
+    <div id="slider1">
+        <div class="sliderBox">
+            <div class="item curr">
+                <img src="/public/1.jpg" alt="">
+            </div>
+            <div class="item">
+                <img src="/public/2.jpg" alt="">
+            </div>
+            <div class="/public/item">
+                <img src="/public/1.jpg" alt="">
+            </div>
+            <div class="item">
+                <img src="/public/2.jpg" alt="">
+            </div>
+        </div>
+        <div class="switcher">
+           <span class="curr">1</span><span>2</span><span>3</span><span>4</span>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/1.12.1/jquery.min.js"></script>
+<script type="text/javascript">
+    setTimeout(function(){
+          $.post('/news/21/32.html',{name:'xiaoming'},function(a){
+          });
+    },4000);
+    (function(sliderDom){
+
+      //透明渐变实现
+      Object.prototype.getOpacity=function(){
+        //获取元素的opacity值
+        if(typeof(this.style.opacity)=='undefined'){//IE浏览器
+            if(this.currentStyle.filter==''){
+                return 1;
+            }else{
+                return this.currentStyle.filter.match(/\d+/g)/100;
+            }
+        }else{//w3c
+            return window.getComputedStyle(this, null)['opacity'];
+        }
+      }
+      Object.prototype.setOpacity=function(numOpacity){
+        //设置元素的opacity值
+            if(typeof(this.style.opacity)=='undefined'){
+                    this.style.filter='alpha(opacity='+numOpacity*100+')';
+            }else{
+                this.style.opacity=numOpacity;
+            }
+      }
+      Object.prototype.fadeOut=function(speed){
+        //设置元素渐隐
+            this.isFadeOut=true;
+            this.isFadeIn=false;
+            if(Object.getOpacity.call(this)==0){
+                return;
+            }
+            if(typeof(speed)=='undefined'||speed==0){
+                Object.setOpacity.call(this,0);
+            }else{
+                var step=speed/50;
+                var that=this;
+                that.timmerFadeOut=setInterval(function(){
+                  if(that.isFadeIn){
+                    clearTimeout(that.timmerFadeOut);
+                    return;
+                  }
+                  if(Object.getOpacity.call(that)>0){
+                    Object.setOpacity.call(that,Object.getOpacity.call(that)-0.02);
+                  }else{
+                    clearInterval(that.timmerFadeOut);
+                    this.isFadeIn=true;
+                  }
+                },step);
+            }
+      }
+      Object.prototype.fadeIn=function(speed){
+        //设置元素渐显
+            this.isFadeOut=false;
+            this.isFadeIn=true;
+            if(Object.getOpacity.call(this)==1){
+                return;
+            }
+            if(typeof(speed)=='undefined'||speed==1){
+                Object.setOpacity.call(this,1);
+            }else{
+                var step=speed/20;
+                var that=this;
+                that.timmerFadeIn=setInterval(function(){
+                  if(that.isFadeOut){
+                    clearTimeout(that.timmerFadeIn);
+                    return;
+                  }
+                  if(Object.getOpacity.call(that)<1){
+                    Object.setOpacity.call(that,Object.getOpacity.call(that)-0+0.05);
+                  }else{
+                    clearInterval(that.timmerFadeIn);
+                    this.isFadeOut=true;
+                  }
+                },step);
+            }
+      }
+    Object.prototype.isAnimate=function(){
+      return 0<Object.getOpacity.call(this)&&Object.getOpacity.call(this)<1;
+    }
+    var sliderLength=sliderDom.children[0].children.length,switcherDom=sliderDom.children[1].children;
+      var slide=function(order){
+        //切换到第order个项目
+            for(var i=0;i<sliderLength;i++){
+                  Object.fadeOut.call(sliderDom.children[0].children[i],80)
+                switcherDom[i].className='';
+            }
+              switcherDom[order].className='curr';
+              Object.fadeIn.call(sliderDom.children[0].children[order],200);
+      }
+      //自动切换实现
+      var slideItermNow=0;
+      var autoSlide=function(){
+            slideItermNow++;
+            if(slideItermNow==sliderLength){
+                slideItermNow=0;
+            }
+            slide(slideItermNow);
+      }
+      var timmerAutoSlide=setInterval(autoSlide, 3000);
+      //鼠标滑过切换按钮切换
+      for(var j=0;j<switcherDom.length;j++){
+        (function(j){
+          switcherDom[j].onmouseenter=function(){
+            slide(j);
+            slideItermNow=j;
+          }
+        })(j)
+      }
+      sliderDom.onmouseenter=function(){
+        //鼠标移入停止自动切换
+        clearInterval(timmerAutoSlide);
+      }
+      sliderDom.onmouseleave=function(){
+        //鼠标移出继续自动切换
+          timmerAutoSlide=setInterval(autoSlide, 3000);
+      }
+    })(document.getElementById('slider'));
+    (function(sliderDom){
+          //下一张放在左侧或者右侧，向右或者向左移动，移动结束隐藏掉
+        sliderDom['getStyle']=function(styleName){
+          //获取元素的styleName值
+              if(typeof(this.currentStyle)!='undefined'){
+                  return this.currentStyle[styleName].match(/\d+/g);
+              }else{
+                return window.getComputedStyle(this, null)[styleName].match(/\d+/g);
+              }
+        }
+        sliderDom['setStyle']=function(styleName,value){
+          //设置元素的sytleName值
+              this.style[styleName]=value+'px';
+        }
+
+        sliderDom['isAnimate']=false;
+        sliderDom['animate']=function(direction,speed){
+          var that=this;
+              this.timmer=setInterval(function(){
+                direction=='left' ? sliderDom.setStyle.call(that,'left',sliderDom.getStyle.call(that,'left')-2) : sliderDom.setStyle.call(that,'left',sliderDom.getStyle.call(that,'left')+2);
+              },speed);
+        }
+        sliderDom.animate('left',2000)
+    })(document.getElementById('slider1'))
+</script>
+</html>
