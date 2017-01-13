@@ -1,32 +1,38 @@
 {
   "name": "Fet",
-  "title":"Fet",
+  "title": "Fet",
   "version": "0.8.0",
   "description": "Front-End Tool",
   "main": "app/main.js",
   "scripts": {
-    "package": "electron-packager . --appname=Fetool --app-copyright='http://www.lpsjj.cn' --app-version=0.8.6 --asar=true --asar-unpack=myConfig.json --all --all --out f:/test17 --version 1.2.0 --overwrite --icon=app/img/icon.ico --version-string.CompanyName=lpsjj,inc --version-string.ProductName=product --version-string.FileDescription=Fetool",
+    "package": "electron-packager . --appname=Fetool --app-copyright='http://www.lpsjj.cn' --app-version=0.8.6 --asar=true --asar-unpack=myConfig.json --all --all --out f:/test18 --version 1.2.0 --overwrite --icon=app/img/icon.ico --version-string.CompanyName=lpsjj,inc --version-string.ProductName=product --version-string.FileDescription=Fetool",
     "start": "electron ."
   },
   "devDependencies": {
+    "bagpipe": "^0.3.5",
     "clean-css": "^3.4.18",
     "electron-packager": "7.0.2",
     "electron-prebuilt": "1.2.0",
+    "formidable": "^1.0.17",
+    "genny": "^0.5.6",
+    "got": "^6.6.3",
+    "handlebars": "^4.0.6",
     "imagemin": "^5.2.1",
     "imagemin-gifsicle": "^5.1.0",
     "imagemin-jpeg-recompress": "^5.1.0",
     "imagemin-pngcrush": "^5.0.0",
     "jsdom": "^9.3.0",
     "less": "^2.7.1",
+    "mysql": "^2.12.0",
     "nib": "^1.1.0",
     "nokitjs": "^1.24.4",
     "parseurl": "^1.3.1",
+    "querystring": "^0.2.0",
     "stylus": "^0.54.5",
     "uglify-js": "^2.6.3"
   },
   "dependencies": {
     "crypto": "0.0.3",
-    "electron-osx-sign": "^0.4.0-beta4",
     "express": "^4.14.0",
     "gaze": "^1.1.0",
     "imagemin-advpng": "^3.1.0",
@@ -42,15 +48,16 @@
     "lpslib": "github:liupishui/lpslib",
     "nconf": "0.8.4",
     "parseurl": "^1.3.1",
-    "socket.temp": "git+https://github.com/liupishui/socket.temp.git"
+    "socket.temp": "git+https://github.com/liupishui/socket.temp.git",
+    "typescript": "^1.8.10"
   },
-    "homepage": "https://github.com/liupishui/Fet",
-    "author": {
-        "name": "jingshuiyuan",
-        "url": "http://www.lpsjj.cn/blog/"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/liupishui/Fet.git"
-    }
+  "homepage": "https://github.com/liupishui/Fet",
+  "author": {
+    "name": "jingshuiyuan",
+    "url": "http://www.lpsjj.cn/blog/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/liupishui/Fet.git"
+  }
 }
