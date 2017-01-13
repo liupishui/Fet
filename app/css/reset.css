@@ -47,6 +47,7 @@ h3{ font-size: 14px; font-weight: bold; }
 .gray{color:#666!important; color: #666;}
 .gray:hover{color:#333!important; color: #333;}
 .graylight{color:#999!important; color: #999;}
+.red{color:#FF3781;}
 * html, * html body{ background-image: url(about:blank); background-attachment: fixed; }
 /*font 'Open Sans' start*/
 /* cyrillic-ext */
