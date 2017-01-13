@@ -21,8 +21,8 @@
     </div>-->
     <div class="div_main">
         <div class="mod_config">
-            <div class="hd">
-                <div class="table_hd">
+            <div class="mod_config_hd">
+                <div class="table_hd fl">
                     <span class="col col1">
                         域名
                     </span>
@@ -33,13 +33,17 @@
                         操作
                     </span>
                 </div>
+                <div class="hd_r">
+                    <a href="tools/index.html">工具箱</a>
+                    <a href="http://www.lpsjj.cn/house/study/">前端常用网址收藏</a>
+                </div>
             </div>
-            <div class="bd">
+            <div class="mod_config_bd">
                 <div class="bd_l">
                     <div class="table_bd">
                     </div>
                     <div class="table_ft">
-                                <input type="button" value="添加新网站" class="btn_normal">
+                        <input type="button" value="添加新网站" class="btn_normal">
                     </div>
                 </div>
                 <div class="bd_r animated">
@@ -97,7 +101,7 @@
                                         </div>
                                        <div class="item">
                                             <div class="hd">
-                                                 js 
+                                                 js
                                             </div>
                                             <div class="bd">
                                                 <input type="text" placeholder="正则匹配文件路径,默认/" class="input_text1" id="jsPath">
@@ -141,6 +145,24 @@
 <script type="text/javascript">
 const {ipcRenderer} = nodeRequire('electron');
 $(function(){
+    //框架开始
+    var app={
+        window:$(window),
+        hd:$('.mod_config_hd'),
+        bd:$('.mod_config_bd'),
+        itemsBox:$(".mod_config .table_bd"),
+        resize:function(){
+            var _this=this;
+            _this.bd.height(_this.window.height()-_this.hd.height());
+            _this.itemsBox.height(_this.bd.height()-$(".mod_config .table_ft").height()-14);
+            _this.window.resize(function(){
+                _this.bd.height(_this.window.height()-_this.hd.height());
+                _this.itemsBox.height(_this.bd.outerHeight()-$(".mod_config .table_ft").height()-14);
+            });
+        }
+    }
+    app.resize();
+    //框架结束
     ipcRenderer.send('documentready','1');
     ipcRenderer.on('documentready',(event,arg)=>{//文档渲染完成读取配置文件并渲染配置文件
         //配置文件为空
@@ -195,6 +217,13 @@ $(function(){
                 ipcRenderer.send('shellOpenItem',$that.parent().prev('input').val());
             }
         });***/
+        //打开网址收藏
+        $(".mod_config .hd_r a").click(function(e){
+            var $e=$.event.fix(e),url=$(this).prop('href');
+            $e.preventDefault();
+            ipcRenderer.send('openBroswer',url);
+        });
+
         ipcRenderer.on('shellOpenItem',(event,arg)=>{if(arg)alert('文件夹不存在，请修改目录文件位置');});
         //浏览目录
         $(".mod_config").delegate('input[value=浏览目录]','click',function(){
