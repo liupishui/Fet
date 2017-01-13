@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" class="page-jscompress">
+    <head>
+        <meta charset="utf-8">
+        <script>
+        window.nodeRequire = require;
+        delete window.require;
+        delete window.exports;
+        delete window.module;
+        </script>
+        <script type="text/javascript" src="../js/jquery.js"></script>
+        <link rel="stylesheet" type="text/css" href="../css/css.css">
+        <link rel="stylesheet" type="text/css" href="../css/reset.css">
+    </head>
+    <body>
+        <textarea class="mainbox">将CSS代码粘贴到此处</textarea>
+        <div class="tr">
+            <input type="button" id="compress" class="input_btn" value="压缩" />
+            <input type="button" id="beautify" class="input_btn" value="美化"/>
+        </div>
+        <div class="tip_error">
+        </div>
+    </body>
+    <script type="text/javascript">
+    const {ipcRenderer} = nodeRequire('electron');
+    $(function(){
+        $(".mainbox").focus(function(){
+            $(this).val()=='将CSS代码粘贴到此处'?$(this).val(''):(!1);
+            $(this).addClass('mainbox_focus');
+        });
+        $(".mainbox").blur(function(){
+            $(this).val()==''?(function(obj){$(obj).val('将CSS代码粘贴到此处');$(obj).removeClass('mainbox_focus')})(this):(!1);
+        });
+        $("#compress").click(function(){
+            $(".tip_error").text('');
+            ipcRenderer.send('compress:Css',$('.mainbox').val());
+            ipcRenderer.on('compress:Css',(event,arg)=>{
+                $('.mainbox').val(arg);
+            });
+            ipcRenderer.on('compress:Css:Error',(event,arg)=>{
+                $(".tip_error").text(arg);
+            });
+        });
+        $("#beautify").click(function(){
+            $(".tip_error").text('');
+            ipcRenderer.send('beautify:Css',$('.mainbox').val());
+            ipcRenderer.on('beautify:Css',(event,arg)=>{
+                $('.mainbox').val(arg);
+            });
+            ipcRenderer.on('beautify:Css:Error',(event,arg)=>{
+                $(".tip_error").text(arg);
+            });
+        });
+    });
+    </script>
+
+</html>
