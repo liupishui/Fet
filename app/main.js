@@ -8,6 +8,9 @@ const {
 const {
   BrowserWindow
 } = electron;
+const path = require("path");
+const os = require('os');
+// Module to create native browser window.
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
@@ -46,6 +49,34 @@ function createWindow(URL,config) {
   });
 }
 var configFilePath = `${__dirname}/myConfig.json`;
+var configFilePathNew=path.join(os.homedir(),'/fet/myConfig.json');
+var myConfig={
+  dir:path.dirname(configFilePathNew),
+  filePath:configFilePathNew,
+  data:[]
+}
+fs.stat(myConfig.dir,function(err,data){
+  if(err){
+    //目录不存在
+    fs.mkdir(myConfig.dir,function(){
+      fs.writeFile(myConfig.filePath,'[]',function(){
+        myConfig.data=[];
+      });
+    });
+  }else{
+    //目录已存在
+    fs.readFile(myConfig.filePath,'utf8',function(err,data){
+      if(err){
+        fs.writeFile(myConfig.filePath,'[]',function(){
+          myConfig.data=[];
+        });
+      }else{
+        myConfig.data=JSON.parse(data);
+      }
+    });
+
+  }
+})
 app.on('ready', ()=>{createWindow(`file://${__dirname}/index.html`)});
 const {
   ipcMain
@@ -57,7 +88,6 @@ app.on('browser-window-focus', (event, arg) => { //应用程序获得焦点时�
 app.on('browser-window-blur', (event, arg) => { //应用程序获得焦点时触发
   event.sender.send('browser-window-focus', '0');
 })***/
-const path = require("path");
 function expandDir(pathName, callback) { //返回目录下的所有目录，执行callback
   //demo expandDir('c:/',function(obj){
   //obj=['c:/system','c:/document','c:/document/user','c:/document/user/libin']
@@ -112,7 +142,7 @@ function expandDirWp(pathname, callback) { //返回目录下的所有目录及�
 }
 //electron.dialog.showMessageBox({'title':'打包结果',type:'info','message':'恭喜您，打包完成！','buttons':['我知道了!']})
 function copyDir(srcPaths, destPaths, processNow) {
-  var timeStep=100,countFile=1,countFileAll=0;
+  var timeStep=1,countFile=1,countFileAll=0;
   var readDir = function(srcPath, destPath, callbackDir) {
     fs.readdir(srcPath, function(err, data) {
       var t = data.length;
@@ -123,7 +153,9 @@ function copyDir(srcPaths, destPaths, processNow) {
             return;
           }
           if (data.isDirectory()) {
-            isCallBack(pathtemp, destPathtemp);
+            if(!~pathtemp.indexOf(destPathtemp)){
+               isCallBack(pathtemp, destPathtemp);
+            }
           } else {
             countFileAll++;
             countFile++;
@@ -135,7 +167,7 @@ function copyDir(srcPaths, destPaths, processNow) {
                 countFileAll--;
                 console.log('F:'+countFileAll+'; T:'+Math.floor(countFileAll*100/1000/60)+'m'+(countFileAll*100/1000%60)+'s');
                 if(countFileAll==0){
-                  electron.dialog.showMessageBox({'title':'打包结果',type:'info','message':'恭喜您，打包完成！','buttons':['我知道了!']})
+                  //electron.dialog.showMessageBox({'title':'打包结果',type:'info','message':'恭喜您，打包完成！','buttons':['我知道了!']})
                 };
               },time);
             })(function(){notCallBack(pathtemp, destPathtemp)},timeStep*countFile);
@@ -280,7 +312,6 @@ return new Promise(function(resolve, reject){
     });
 });
 }
-const os = require('os');
 //css压缩
 const CleanCSS = require('clean-css');
 var CleanCSSObj = new CleanCSS();
@@ -391,7 +422,7 @@ const {
 } = require('electron');
 ipcMain.on('modifyConfig', (event, arg) => { //修改配置文件
   //shell.openExternal('https://github.com');
-  fs.writeFile(configFilePath, arg, 'utf8', function(err) {
+  fs.writeFile(myConfig.filePath, arg, 'utf8', function(err) {
     if (err) throw err;
   });
   //shell.openItem(JSON.parse(arg)[JSON.parse(arg).length-1].path);
@@ -420,16 +451,33 @@ ipcMain.on('openBroswer',(event,arg)=>{
   }
 });
 ipcMain.on('openExternalAdd', (event, arg) => { //浏览器打开
-  fs.readFile(configFilePath, 'utf8', function(err, data) {
+  fs.readFile(myConfig.filepath, 'utf8', function(err, data) {
     if (err) throw err;
     var dataArr = JSON.parse(data);
     var itemConf = dataArr[arg];
     shell.openExternal('http://' + itemConf.host + ':' + itemConf.port);
   })
 });
+
+//所有方法
+var get_nodeMoudels=function(){
+  var methods_nodeMoudles=[];
+  var pathDir=__dirname.split(path.sep);
+  pathDir[pathDir.length-1]='node_modules';
+  var pathArr=fs.readdirSync(pathDir.join('/'));
+  for(let i=0;i<pathArr.length;i++){
+    var dirModules=pathArr[i].split(path.sep).pop();
+    try{
+      methods_nodeMoudles[dirModules]=require(dirModules);
+    }catch(e){
+    };
+  }
+  return methods_nodeMoudles;
+}
+const nodeMoudels=get_nodeMoudels();
 var serverAll = [];
 ipcMain.on('openExternal', (event, arg) => { //浏览器打开
-  fs.readFile(configFilePath, 'utf8', function(err, data) {
+  fs.readFile(myConfig.filePath, 'utf8', function(err, data) {
     if (err) throw err;
     var dataArr = JSON.parse(data);
     var itemConf = dataArr[arg];
@@ -465,35 +513,10 @@ ipcMain.on('openExternal', (event, arg) => { //浏览器打开
             serverPath:itemConf.path,
             url:parseUrlObj,
             reqAddress:destPath,
-            lib:{}
+            lib:nodeMoudels
           };
           (function($$,mainjs){
-            var pathSep=__dirname.split(path.sep);
-            pathSep[pathSep.length-1]='node_modules';
-            var dirnameRoot=pathSep.join('/');
-            var modules=fs.readdirSync(dirnameRoot);
-            var countLoad=0;
-            var isFile=function(path,moduleName,callback){
-                fs.stat(path,function(err,stat){
-                  countLoad++;
-                  if(err){
-                    return;
-                  }
-                  if(stat.isFile()){
-                    callback(moduleName,path,countLoad);
-                  };
-                })
-              }
-            for(var i=0;i<modules.length;i++){
-              isFile(dirnameRoot+'/'+modules[i]+'/index.js',modules[i],function(moduleName,modulePath,nums){
-                $$.lib[moduleName]=require(modulePath);
-                if(nums==modules.length){
-                  $$.lib.Handlebars=require('Handlebars');
-                  $$.lib.util = require('util');
-                  eval(mainjs);
-                };
-              })
-            }
+            eval(mainjs);
           })(preConfig,mainjs);
         }
       })
@@ -743,14 +766,18 @@ ipcMain.on('openExternal', (event, arg) => { //浏览器打开
   });
 })
 ipcMain.on('packagePaper', (event, arg) => { //打包文件
-  fs.readFile(configFilePath, 'utf8', function(err, data) {
+  fs.readFile(myConfig.filePath, 'utf8', function(err, data) {
     if (err) throw err;
     var configObj = JSON.parse(data);
     var itemConf = configObj[arg]; //打包文件配置
     if (itemConf.packagePath == '') {
       itemConf.packagePath = path.join(os.homedir(), itemConf.path.substr(path.dirname(itemConf.path).length));
-      fs.mkdir(itemConf.packagePath, (err) => {});
     }
+    if(itemConf.path==itemConf.packagePathPath){
+      electron.dialog.showErrorBox({title:'配置错误',content:'打包目录不能和项目目录相同'});
+      return;
+    }
+    fs.mkdir(itemConf.packagePath, (err) => {});
     //引入图片压缩
     const imagemin = require('imagemin');
     const imageminJpegRecompress = require('imagemin-jpeg-recompress');
@@ -805,7 +832,7 @@ ipcMain.on('packagePaper', (event, arg) => { //打包文件
           break;
         case '.png':
         if(itemConf.imgCompress){
-            imageminPngcrush()(obj.data).then((rst)=>{
+            nodeMoudels['imagemin-optipng']()(obj.data).then((rst)=>{
               fs.writeFile(obj.destPath,rst,(err)=>{
                   rst=null;
                 });
@@ -909,7 +936,7 @@ ipcMain.on('packagePaper', (event, arg) => { //打包文件
 ipcMain.on('documentready', (event, arg) => {
 	shell.openExternal('http://www.lpsjj.cn/thread-185-1-1.html');
   if (arg) {
-    fs.readFile(configFilePath, 'utf8', function(err, data) {
+    fs.readFile(myConfig.filePath, 'utf8', function(err, data) {
       if (err) throw err;
       event.sender.send('documentready', data);
     });
