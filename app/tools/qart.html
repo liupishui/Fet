@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" class="page-tools-htmlchar">
+    <head>
+        <meta charset="utf-8">
+        <script>
+        window.nodeRequire = require;
+        delete window.require;
+        delete window.exports;
+        delete window.module;
+        </script>
+        <link rel="stylesheet" type="text/css" href="../css/css.css">
+        <link rel="stylesheet" type="text/css" href="../css/reset.css">
+        <style type="text/css" media="screen">
+            .page-tools-htmlchar table tr .yellow{background:#ff0;}
+            table tbody td{user-select:element;-webkit-user-select:element;}
+        </style>
+        <script type="text/javascript" src="../js/jquery.js"></script>
+        <script type="text/javascript" src="../js/avalon.min.js"></script>
+        <script type="text/javascript" src="../js/qart.js"></script>
+        <script type="text/javascript">
+            var getBase64=function(file,callback){
+                var reader=new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload=function(){
+                    callback(reader.result);
+                }
+            }
+            var makeQArt=function(value,imagePath,filter,dom){
+                new QArt({
+                        value: value,
+                        imagePath: imagePath,
+                        filter: filter//'threshold'||'color'||'none'
+                    }).make(dom);
+                }
+            var vm=avalon.define({
+                $id:"qart",
+                data:'',
+                filter:'filter',//'threshold'||'color'||'none'
+                imgPath:'../img/icon.png',
+                fileChange:function($event){
+                    getBase64(document.getElementById('file').files[0],function(base64Img){
+                        var regex = /data:(.*);base64,(.*)/gm;
+                        var parts = regex.exec(base64Img);
+                        vm.imgPath = parts[0];
+                        makeQArt(vm.data,vm.imgPath,vm.filter,document.getElementById('qart'));
+                    });
+                }
+            });
+            vm.$watch("data",function(a){
+                if(a==''){
+                    return;
+                }
+                if(document.getElementById('file').files.length==0){
+                    makeQArt(vm.data,vm.imgPath,vm.filter,document.getElementById('qart'));
+                }else{
+                    getBase64(document.getElementById('file').files[0],function(base64Img){
+                        var regex = /data:(.*);base64,(.*)/gm;
+                        var parts = regex.exec(base64Img);
+                        vm.imgPath = parts[0];
+                        makeQArt(vm.data,vm.imgPath,vm.filter,document.getElementById('qart'));
+                    });
+                }
+            });
+            vm.$watch("filter",function(a){
+                if(document.getElementById('file').files.length==0){
+                    makeQArt(vm.data,vm.imgPath,vm.filter,document.getElementById('qart'));
+                }else{
+                    getBase64(document.getElementById('file').files[0],function(base64Img){
+                        var regex = /data:(.*);base64,(.*)/gm;
+                        var parts = regex.exec(base64Img);
+                        vm.imgPath = parts[0];
+                        makeQArt(vm.data,vm.imgPath,vm.filter,document.getElementById('qart'));
+                    });
+                }
+            });
+        </script>
+        <style type="text/css" media="screen">
+            body{
+                height:400px;
+            }
+            .input_text1{
+                width:500px;
+                height: 30px;
+                border:1px solid #33f;
+            }
+            .input_text1:focus{
+                outline-color: #33f;
+                outline-offset: 4px;
+            }
+            label{
+                display:inline-block;
+                width:550px;
+            }
+            label:hover{
+                background:#ccc;
+            }
+        </style>
+    </head>
+    <body>
+    <div ms-controller="qart">
+             <input class="input_text1" ms-duplex='@data' placeholder="请输入要转换为二维码的字符">
+            <br/>
+             <input type="radio" ms-duplex-radio="filter" id="none" value="none"><label for="none">none</label><br/>
+             <input type="radio" ms-duplex-radio="filter" id="color" value="color"><label for="color">color</label><br/>
+             <input type="radio" ms-duplex-radio="filter" id="threshold" value="threshold"><label for="threshold">threshold</label>
+             <br/>
+            <input type="file" id="file" ms-on-change="@fileChange($event)" />
+    </div>
+    <div id="qart">
+
+    </div>
+    </body>
+</html>
