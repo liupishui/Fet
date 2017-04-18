@@ -418,7 +418,7 @@ $$.render=function(tpl,data){
         var tplStr=fs.readFileSync($$.serverPath+'/'+tpl);
             tplStr = tplStr instanceof Buffer ? tplStr.toString() : tplStr;
             tplStr = lpslib.replaceFileWithStr(tplStr, $$.serverPath);
-        var template=$$.lib.Handlebars.compile(tplStr);
+        var template=$$.lib.handlebars.compile(tplStr);
             res.write(template(data));
             resolve(true);
     }).then((a)=>{
@@ -479,7 +479,7 @@ if(!isStatic){
     let getActionObject=function(){
         for(let x in $$.config.router){
             var reg=new RegExp($$.config.router[x].rule);
-            var pam=$$.url.href.match(reg);
+            var pam=$$.url.pathname.match(reg);
             if(pam){
                 return {action:$$.config.router[x].action,arguments:pam.slice(1)}
             }
