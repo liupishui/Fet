@@ -7,7 +7,7 @@ $$.config={
         database :'works'
     },
     router:[
-        {rule   :'^\\S+$',action :'main'},
-        {rule:"^\/news/(\\d+)/(\\d+).html",action :'news'}
+        {rule   :'^\/$',action :'main'},
+        {rule:'^/news/(\\d+)/(\\d+).html',action :'news'}
         ]
 }
