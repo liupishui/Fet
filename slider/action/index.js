@@ -12,6 +12,7 @@ $$.action={
                 fs.rename($$.post.files[x].path,$$.serverPath+newPath);
                 data.imgSrc=newPath;
             }
+            const apps=require('lodash');
             $$.render('/tpl/index.html',data);
             res.end();
             $$.connection.destroy();
@@ -22,7 +23,7 @@ $$.action={
             var data={
                 works:yield new $$.tables.works_items().select(id)
             }
-            $$.printAll($$.req);
+            //$$.printAll($$.req);
             res.end();
             $$.connection.destroy();
         });
