@@ -5,6 +5,6 @@
 >
 node5.0+
 >
-###LICENSE
+### License
 
 Fet is [BSD 3-Clause Licensed](./LICENSE)
