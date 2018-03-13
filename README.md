@@ -4,3 +4,5 @@
 >Don't pack your packt into the project folder
 >
 node5.0+
+##LICENSE
+Fet is [BSD 3-Clause Licensed](./LICENSE)
